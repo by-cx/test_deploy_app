@@ -10,6 +10,7 @@ jobs:
     env:
         HOST: ssh.rosti.cz
         USER: app
+        PORT: 26354
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -31,7 +32,7 @@ jobs:
           npm run build
       - name: Setup Node.js
         run: |
-            ssh $USER@$HOST rosti node
+            ssh -p $PORT $USER@$HOST rosti node
       - name: Setup Supervisord
         run: |
             cat << EOF > rosti.app.conf
@@ -50,7 +51,7 @@ jobs:
             stdout_events_enabled=false
             redirect_stderr=true
             EOF
-            scp rosti.app.conf $USER@$HOST:/srv/conf.d/supervisor.d/app.conf
+            scp -P $PORT rosti.app.conf $USER@$HOST:/srv/conf.d/supervisor.d/app.conf
             rm rosti.app.conf
       - name: Setup Nginx
         run: |
@@ -69,11 +70,11 @@ jobs:
                 }
             }        
             EOF
-            scp rosti.nginx.conf $USER@$HOST:/srv/conf.d/nginx.d/app.conf
+            scp -P $PORT rosti.nginx.conf $USER@$HOST:/srv/conf.d/nginx.d/app.conf
             rm rosti.nginx.conf
       - name: Copy code
         run: |
-          rsync -av --delete-after --exclude=.git
+          rsync -ave "ssh -p $PORT" --delete-after --exclude=.git
       - name: Apply changes
         run: |
           supervisorctl reread
