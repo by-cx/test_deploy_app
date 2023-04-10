@@ -35,7 +35,7 @@ jobs:
           npm run build
       - name: Setup Node.js
         run: |
-            ssh -o UserKnownHostsFile=./known_hosts -p $PORT $USER@$HOST /usr/bin/local/rosti node
+            ssh -o UserKnownHostsFile=./known_hosts -p $PORT $USER@$HOST /usr/local/bin/rosti node
       - name: Setup Supervisord
         run: |
             cat << EOF > rosti.app.conf
