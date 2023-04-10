@@ -21,8 +21,7 @@ jobs:
           ssh-private-key: ${{ secrets.ROSTI_SSH_KEY }}
       - name: Setup hostkey
         run: |
-          mkdir -p ~/.ssh
-          ssh-keyscan $HOST > ~/.ssh/known_hosts
+          ssh-keyscan $HOST > ./known_hosts
       - name: env
         run: |
           cat << EOF > .env.local
@@ -36,7 +35,7 @@ jobs:
           npm run build
       - name: Setup Node.js
         run: |
-            ssh -p $PORT $USER@$HOST rosti node
+            ssh -o UserKnownHostsFile=./known_hosts -p $PORT $USER@$HOST rosti node
       - name: Setup Supervisord
         run: |
             cat << EOF > rosti.app.conf
@@ -55,7 +54,7 @@ jobs:
             stdout_events_enabled=false
             redirect_stderr=true
             EOF
-            scp -P $PORT rosti.app.conf $USER@$HOST:/srv/conf.d/supervisor.d/app.conf
+            scp -o UserKnownHostsFile=./known_hosts -P $PORT rosti.app.conf $USER@$HOST:/srv/conf.d/supervisor.d/app.conf
             rm rosti.app.conf
       - name: Setup Nginx
         run: |
@@ -74,11 +73,11 @@ jobs:
                 }
             }        
             EOF
-            scp -P $PORT rosti.nginx.conf $USER@$HOST:/srv/conf.d/nginx.d/app.conf
+            scp -o UserKnownHostsFile=./known_hosts -P $PORT rosti.nginx.conf $USER@$HOST:/srv/conf.d/nginx.d/app.conf
             rm rosti.nginx.conf
       - name: Copy code
         run: |
-          rsync -ave "ssh -p $PORT" --delete-after --exclude=.git
+          rsync -ave "ssh -o UserKnownHostsFile=./known_hosts -p $PORT" --delete-after --exclude=.git
       - name: Apply changes
         run: |
           supervisorctl reread
