@@ -21,7 +21,7 @@ jobs:
           ssh-private-key: ${{ secrets.ROSTI_SSH_KEY }}
       - name: Setup hostkey
         run: |
-          ssh-keyscan $HOST > ./known_hosts
+          ssh-keyscan -p $PORT $HOST > ./known_hosts
       - name: env
         run: |
           cat << EOF > .env.local
