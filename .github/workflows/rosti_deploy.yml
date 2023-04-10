@@ -19,6 +19,10 @@ jobs:
       - uses: webfactory/ssh-agent@v0.8.0
         with:
           ssh-private-key: ${{ secrets.ROSTI_SSH_KEY }}
+      - name: Setup hostkey
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan $HOST > ~/.ssh/known_hosts
       - name: env
         run: |
           cat << EOF > .env.local
