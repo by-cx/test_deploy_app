@@ -1,0 +1,78 @@
+name: Deploy into Roští.cz
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+        HOST: ssh.rosti.cz
+        USER: app
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "v19.3.0"
+      - uses: https://github.com/webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ secrets.ROSTI_SSH_KEY }}
+      - name: env
+        run: |
+          cat << EOF > .env.local
+          ${{ secrets.ENV }}
+          EOF
+      - name: Build
+        run: |
+          npm build
+      - name: Setup Node.js
+        run: |
+            ssh $USER@$HOST
+      - name: Setup Supervisord
+        run: |
+            cat << EOF > rosti.app.conf
+            [program:app]
+            command=/srv/bin/primary_tech/npm start
+            environment=PATH="/srv/bin/primary_tech:/usr/local/bin:/usr/bin:/bin:/srv/.npm-packages/bin"
+            stopasgroup=true
+            directory=/srv/app
+            process_name=app
+            autostart=true
+            autorestart=true
+            stdout_logfile=/srv/log/node.log
+            stdout_logfile_maxbytes=2MB
+            stdout_logfile_backups=5
+            stdout_capture_maxbytes=2MB
+            stdout_events_enabled=false
+            redirect_stderr=true
+            EOF
+            scp rosti.app.conf $USER@$HOST:/srv/conf.d/supervisor.d/app.conf
+            rm rosti.app.conf
+      - name: Setup Nginx
+        run: |
+            cat << EOF > rosti.nginx.conf
+            server {
+                listen       0.0.0.0:8000;
+                listen       [::]:8000;
+                location / {
+                        proxy_pass         http://127.0.0.1:3000/;
+                        proxy_redirect     default;
+                        proxy_set_header   X-Real-IP  $remote_addr;
+                        proxy_set_header   Host       $host;
+                }
+                location /static/ {
+                        alias /srv/app/public/;
+                }
+            }        
+            EOF
+            scp rosti.nginx.conf $USER@$HOST:/srv/conf.d/nginx.d/app.conf
+            rm rosti.nginx.conf
+      - name: Copy code
+        run: |
+          rsync -av --delete-after --exclude=.git
+      - name: Apply changes
+        run: |
+          supervisorctl reread
+          supervisorctl restart app
+          supervisorctl restart nginx
