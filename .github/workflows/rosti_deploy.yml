@@ -25,10 +25,10 @@ jobs:
           EOF
       - name: Build
         run: |
-          npm build
+          npm run build
       - name: Setup Node.js
         run: |
-            ssh $USER@$HOST
+            ssh $USER@$HOST rosti node
       - name: Setup Supervisord
         run: |
             cat << EOF > rosti.app.conf
