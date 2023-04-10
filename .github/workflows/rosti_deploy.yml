@@ -23,6 +23,9 @@ jobs:
           cat << EOF > .env.local
           ${{ secrets.ENV }}
           EOF
+      - name: Dependencies
+        run: |
+          npm install
       - name: Build
         run: |
           npm run build
