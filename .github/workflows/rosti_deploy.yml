@@ -25,7 +25,7 @@ jobs:
       run: |
         ssh-keyscan -p $PORT $HOST > ./known_hosts
     - name: env
-        run: |
+      run: |
         cat << EOF > .env
         ${{ secrets.ENV }}
         EOF
