@@ -23,7 +23,7 @@ jobs:
           ssh-private-key: ${{ secrets.ROSTI_SSH_KEY }}
       - name: Setup hostkey
         run: |
-          ssh-keyscan -p $PORT $HOST > ./known_hosts
+          echo "ssh.rosti.cz ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDNcsWQcEoHDhJ/t1xp+3B5FxTuPNRc3KvB784e/OFWJodjkYSJ00BuSvhqS2BNrTD/qlGgBxo8UvLMhoOT8UfkCywNBOIuS5dEv+VLhSDXu8GcJN7z4WjjTMPwn2nJh+1cApzJxSl/oCYONwGjmKqar93D99ej6BFwD+LxWxRYwEqACV1zZ4F0orgfNFEusOZTnkuJ0xikdnh8vGEo15/fZInEth8YCn5u6mWfOogc3nbEyfD2PJ9e7/dg4RwnV/cD6TIhQINguPbA3Oho/RNmOctWoCRLUekP1dLmO4B9MXM4On3UxzflwVgYtkM9vX25QxxiPJqTrZ7P+TQSjp6T" > ./known_hosts
       - name: env
         run: |
           cat << EOF > .env
