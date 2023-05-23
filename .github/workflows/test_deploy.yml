@@ -47,7 +47,7 @@ jobs:
           environment=PATH="/srv/bin/primary_tech:/usr/local/bin:/usr/bin:/bin:/srv/.npm-packages/bin"
           stopasgroup=true
           directory=/srv/app
-#          directory=/srv/app/dist
+          #directory=/srv/app/dist
           process_name=app
           autostart=true
           autorestart=true
