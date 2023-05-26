@@ -30,6 +30,7 @@ jobs:
           npm install
       - name: Build
         run: |
+          npm run build
           ./node_modules/.bin/next export
       - name: Setup Nginx
         run: |
