@@ -51,3 +51,6 @@ jobs:
       - name: Copy generated page
         run: |
           rsync -ave "ssh -o UserKnownHostsFile=./known_hosts -p $PORT" --delete-after --exclude=.git ./out/ $USER@$HOST:/srv/app/
+      - name: Apply changes to Nginx
+        run: |
+          ssh -o UserKnownHostsFile=./known_hosts -p $PORT $USER@$HOST nginx -s reload
