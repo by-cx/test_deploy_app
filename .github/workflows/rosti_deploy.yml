@@ -24,7 +24,7 @@ jobs:
           ssh-private-key: ${{ secrets.ROSTI_SSH_KEY }}
       - name: Setup hostkey
         run: |
-          echo "ssh.rosti.cz ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCgkcGL1/mwUqEYtuBSr292ttc5QBw5CNV7tomgJHAKLMN4aCPbSQZqbgWNpN9UX5DlxD5JWk7VsGH36LPefbpcVChAoi0oro1VMlma6ZMILWOmMpKE3mgSqrct4VR+xWfZSGoYKQrZ9yg9oCckKvd4c7h6azjapV/pjK2QdFzZYmzqs0y9yitzYvD41NGtqWpLCVZLFggIrZMCfJrfbjeWPXsjw0H6jbUliEF7awCSV8BOlzsQLrkEh4I50DJ1XqFtXLS6HRCHc6W9zH8T9ENZSBek4T0l0X8E4sNsls7WUJEn1SCPE5VEjILnqvh4jVd88z1Z1YzJrhzjN3DleUqN" > ./known_hosts
+          echo "ssh.rosti.cz ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCSerImj1S/90WjTvUuVW3Pm0D+tFCenD9svYi+4pdo4E1vuJ1W7ikonJfAQbfEEIPVm3OsjUrZEB8Akgx+aqUY/lwpbll7W37IgZTOV7lYNOHMwSZVknLYXj5y3JWgFjOPiljBrZCFFRGc6q2LCZu30U4OjUmLI/uxEM3fULX1CYBg/m+wFGASSZ6SmoLMV9G6BzcmmTpHff1VeHtkMT3Pcz2z95kPQaXlvarFe7892KikqEjLtCS9qLWhEOiBvsLbw+Bqry9sKiP4DD/2uEkKhTvVWlIfbPJ6HJo3i3nwnxPSprB1AbCGQJnY1Z92dKirRB/0yghox0TJDTx12m4v" > ./known_hosts
       - name: Dependencies
         run: |
           npm install
